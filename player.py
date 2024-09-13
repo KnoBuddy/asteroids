@@ -2,6 +2,7 @@ from circleshape import *
 from constants import *
 
 class Player(CircleShape):
+
     def __init__(self, x, y):
         super().__init__(x, y, radius=PLAYER_RADIUS)
         self.rotation = 0
@@ -33,9 +34,7 @@ class Player(CircleShape):
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
         self.rotation %= 360
-        print(self.rotation)
 
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
-        print(self.position)
