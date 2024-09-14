@@ -16,12 +16,16 @@
 
 import pygame
 import sys
+import os
 from circleshape import *
 from constants import *
 from player import *
 from asteroid import *
 from asteroidfield import *
 from shot import *
+
+cwd = "/home/kyle/workspace/github.com/knobuddy/asteroids/"
+os.chdir(cwd)
 
 def main():
     print("Starting asteroids!")
@@ -47,6 +51,10 @@ def main():
 
     Shot.containers = (shots, updateable, drawable)
 
+    pygame.mouse.set_visible(False)
+    crosshair_img = pygame.image.load("crosshair.png")
+    crosshair_rect = crosshair_img.get_rect()
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -68,7 +76,9 @@ def main():
                 if asteroid.collides_with(shot):
                     asteroid.split()
                     shot.kill()
-                
+        
+        crosshair_rect.center = pygame.mouse.get_pos()
+        screen.blit(crosshair_img, crosshair_rect)
 
         pygame.display.flip()
 
