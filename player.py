@@ -9,18 +9,15 @@ class Player(CircleShape):
         super().__init__(x, y, radius=PLAYER_RADIUS)
         self.rotation = 0
         self.timer = 0
-    
-    # in the player class
-    def triangle(self):
-        forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
-        a = self.position + forward * self.radius
-        b = self.position - forward * self.radius - right
-        c = self.position - forward * self.radius + right
-        return [a, b, c]
+        self.ship_img = pygame.image.load("./images/ship_small.png")
+        self.ship_rect = self.ship_img.get_rect()
+        self.angle = 0
     
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle(), 2)
+        self.ship_rect.center = self.position
+        rotated_ship_img = pygame.transform.rotate(self.ship_img, self.angle)
+        new_ship_rect = rotated_ship_img.get_rect(center = self.ship_img.get_rect(center = self.position).center)
+        screen.blit(rotated_ship_img, new_ship_rect)
 
     def update(self, dt):
         self.timer -= dt
@@ -29,11 +26,7 @@ class Player(CircleShape):
 
         keys = pygame.key.get_pressed()
         b1, b2, b3 = pygame.mouse.get_pressed(num_buttons=3)
-#
-#        if keys[pygame.K_a]:
-#            self.rotate(-dt)
-#        if keys[pygame.K_d]:
-#            self.rotate(dt)
+        
         if keys[pygame.K_s]:
            self.move(-dt)
         if keys[pygame.K_w]:
@@ -53,8 +46,8 @@ class Player(CircleShape):
             mousey = 0
         if mousex >= -1 and mousey <= 0 and mousey >= -1 and mousey <= 0:
             mousex = 0
-        print(f"mousey: {mousey}\n mousex: {mousex}")
         angle = math.atan2(mousey, mousex) * (180/math.pi)
+        self.angle = -angle
         if angle < 0:
             angle += 360
         angle -= 90

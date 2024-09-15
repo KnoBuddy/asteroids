@@ -1,12 +1,13 @@
 # Current Game:
-# Player moves with WASD
-# Asteroids spawn and move randomly
-# Player can shoot asteroids
-# Bigger asteroids split when shot, and small ones are destroyed
+# Player moves with WASD --- Done
+# Asteroids spawn and move randomly --- Done
+# Player can shoot asteroids --- Done
+# Bigger asteroids split when shot, and small ones are destroyed --- Done
 
 # Additions wanted in priority from top to bottom:
-# Player rotation follow mouse instead of WASD
-# Crosshair follows mouse
+# Player rotation follow mouse instead of WASD CHECK --- DONE!
+# Crosshair follows mouse --- DONE!
+# Add sprites instead of basic shapes --- Player and Crosshair DONE!
 # Collisions between asteroids and semi accurate physics bounce
 # Fix bullets to spawn at tip of ship, not from center
 # Add score, menu screen, game loop
@@ -52,7 +53,7 @@ def main():
     Shot.containers = (shots, updateable, drawable)
 
     pygame.mouse.set_visible(False)
-    crosshair_img = pygame.image.load("crosshair.png")
+    crosshair_img = pygame.image.load("./images/crosshair2.png")
     crosshair_rect = crosshair_img.get_rect()
 
     while True:
