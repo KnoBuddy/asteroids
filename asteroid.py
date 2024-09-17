@@ -56,14 +56,15 @@ class Asteroid(CircleShape):
     
     def update(self, dt):
         self.position += self.velocity * dt
-        if self.timer > 0:
+        if self.timer == 0:
             self.timer -= dt
             if self.timer >= 3.6:
-                self.timer = 0.001
+                self.timer = 0
         else:
             self.timer += dt
-            if self.timer <= 0:
+            if self.timer <= 0.001:
                 self.timer = 3.6
+        self.timer %= 3.6
 
         self.rotate()
 
