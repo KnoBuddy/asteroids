@@ -9,42 +9,31 @@ class Asteroid(CircleShape):
         self.rotation = 0
         self.angle = direction
         self.timer = self.angle/100
-        if radius == 60:
-            if asteroid_type == 1:
-                self.asteroid_img = pygame.image.load("./images/asteroid1.png")
-                self.asteroid_rect = self.asteroid_img.get_rect()
-            elif asteroid_type == 2:
-                self.asteroid_img = pygame.image.load("./images/asteroid2.png")
-                self.asteroid_rect = self.asteroid_img.get_rect()
-            else:
-                self.asteroid_img = pygame.image.load("./images/asteroid3.png")
-                self.asteroid_rect = self.asteroid_img.get_rect()
-        if radius == 40:
-            if asteroid_type == 1:
-                self.asteroid_img = pygame.image.load("./images/asteroid1.png")
-                self.asteroid_img = pygame.transform.smoothscale_by(self.asteroid_img, 0.66)
-                self.asteroid_rect = self.asteroid_img.get_rect()
-            elif asteroid_type == 2:
-                self.asteroid_img = pygame.image.load("./images/asteroid2.png")
-                self.asteroid_img = pygame.transform.smoothscale_by(self.asteroid_img, 0.66)
-                self.asteroid_rect = self.asteroid_img.get_rect()
-            else:
-                self.asteroid_img = pygame.image.load("./images/asteroid3.png")
-                self.asteroid_img = pygame.transform.smoothscale_by(self.asteroid_img, 0.66) 
-                self.asteroid_rect = self.asteroid_img.get_rect()
-        if radius == 20:
-            if asteroid_type == 1:
-                self.asteroid_img = pygame.image.load("./images/asteroid1.png")
-                self.asteroid_img = pygame.transform.smoothscale_by(self.asteroid_img, 0.33) 
-                self.asteroid_rect = self.asteroid_img.get_rect()
-            elif asteroid_type == 2:
-                self.asteroid_img = pygame.image.load("./images/asteroid2.png")
-                self.asteroid_img = pygame.transform.smoothscale_by(self.asteroid_img, 0.33)
-                self.asteroid_rect = self.asteroid_img.get_rect()
-            else:
-                self.asteroid_img = pygame.image.load("./images/asteroid3.png")
-                self.asteroid_img = pygame.transform.smoothscale_by(self.asteroid_img, 0.33)
-                self.asteroid_rect = self.asteroid_img.get_rect()
+        # Dictionary mapping asteroid types to image file paths
+        asteroid_images = {
+            1: "./images/asteroid1.png",
+            2: "./images/asteroid2.png",
+            3: "./images/asteroid3.png"
+        }
+
+        # Dictionary mapping radius to the scaling factor
+        scale_factors = {
+            60: 1.0,   # No scaling for radius 60
+            40: 0.66,  # Scaling by 0.66 for radius 40
+            20: 0.33   # Scaling by 0.33 for radius 20
+        }
+
+        # Check if the asteroid_type is valid
+        if asteroid_type in asteroid_images and radius in scale_factors:
+            # Load the appropriate asteroid image
+            self.asteroid_img = pygame.image.load(asteroid_images[asteroid_type])
+            
+            # Apply scaling if necessary
+            if scale_factors[radius] != 1.0:
+                self.asteroid_img = pygame.transform.smoothscale_by(self.asteroid_img, scale_factors[radius])
+            
+            # Get the rectangle for the asteroid image
+            self.asteroid_rect = self.asteroid_img.get_rect()
 
 
     def draw(self, screen):

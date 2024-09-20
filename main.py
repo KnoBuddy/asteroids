@@ -10,7 +10,8 @@
 # Add sprites instead of basic shapes --- Player and Crosshair DONE!
 # Fix movement so that sideways movement is more user friendly
 # Collisions between asteroids and semi accurate physics bounce
-# Fix bullets to spawn at tip of ship, not from center
+# Fix bullets to spawn at tip of ship, not from center --- Half DONE!
+# Implement multiple lives and respawning
 # Add score, menu screen, game loop -- DONE
 # Add power ups that change gun type or increase rate of fire
 # Levels with different speeds and types of asteroids
