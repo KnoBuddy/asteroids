@@ -18,7 +18,6 @@
 # Color different types of asteroids.
 
 import pygame
-import sys
 import os
 
 from startup import *
@@ -96,7 +95,11 @@ def run_game():
                         asteroid.split()
                         shot.kill()
                         new_score += 1
-                        print(new_score)
+                for powerup in startup.powerup:
+                    if powerup.collides_with(startup.player):
+                        startup.player.has_left_gun = True
+                        startup.player.has_right_gun = True
+
             
             startup.crosshair_rect.center = pygame.mouse.get_pos()
             screen.blit(startup.crosshair_img, startup.crosshair_rect)

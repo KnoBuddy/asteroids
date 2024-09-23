@@ -12,6 +12,8 @@ class Player(CircleShape):
         self.ship_img = pygame.image.load("./images/ship_small.png")
         self.ship_rect = self.ship_img.get_rect()
         self.angle = 0
+        self.has_left_gun = False
+        self.has_right_gun = False
     
     def draw(self, screen):
         self.ship_rect.center = self.position
@@ -59,6 +61,44 @@ class Player(CircleShape):
 #        self.rotation += PLAYER_TURN_SPEED * dt
 #        self.rotation %= 360
 
+    def get_nose_position(self):
+        # Convert angle from degrees to radians
+        angle_radians = math.radians(self.rotation + 90)
+        
+        # Calculate the X and Y offset for the nose position, ensuring it's offset by the radius
+        nose_offset_x = math.cos(angle_radians) * (PLAYER_RADIUS + 4)  # +10 to ensure it's slightly in front
+        nose_offset_y = math.sin(angle_radians) * (PLAYER_RADIUS + 4)
+        
+        # Calculate the final position of the nose based on the player's current position
+        nose_position_x = self.position.x + nose_offset_x
+        nose_position_y = self.position.y + nose_offset_y
+        
+        return pygame.Vector2(nose_position_x, nose_position_y)
+    
+    def get_side_positions(self):
+        # Convert angle from degrees to radians
+        angle_radians = math.radians(self.rotation + 90)
+        
+        # Perpendicular angles for the right and left sides
+        right_angle_radians = angle_radians + math.pi / 2   # 90 degrees to the right
+        left_angle_radians = angle_radians - math.pi / 2  # 90 degrees to the left
+        
+        # Calculate the X and Y offset for the right position
+        right_offset_x = math.cos(right_angle_radians) * (PLAYER_RADIUS)
+        right_offset_y = math.sin(right_angle_radians) * (PLAYER_RADIUS)
+        right_position_x = self.position.x + right_offset_x
+        right_position_y = self.position.y + right_offset_y
+        
+        # Calculate the X and Y offset for the left position
+        left_offset_x = math.cos(left_angle_radians) * (PLAYER_RADIUS)
+        left_offset_y = math.sin(left_angle_radians) * (PLAYER_RADIUS)
+        left_position_x = self.position.x + left_offset_x
+        left_position_y = self.position.y + left_offset_y
+        
+        return pygame.Vector2(right_position_x, right_position_y), pygame.Vector2(left_position_x, left_position_y)
+
+
+
     def move_y(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
@@ -70,7 +110,28 @@ class Player(CircleShape):
     def shoot(self):
         if self.timer > 0:
             return
-        shot = Shot(self.position.x, self.position.y)
-        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+        
+        # Shoot from the nose (tip of the ship)
+        nose_position = self.get_nose_position()
+        adjusted_rotation = self.rotation + 90
+        shot = Shot(nose_position.x, nose_position.y)
+        shot.velocity = pygame.Vector2(math.cos(math.radians(adjusted_rotation)), 
+                                    math.sin(math.radians(adjusted_rotation))) * PLAYER_SHOOT_SPEED
         self.timer = PLAYER_SHOOT_COOLDOWN
+        
+        right_position, left_position = self.get_side_positions()
+
+        if self.has_right_gun:
+            
+            # right gun shot
+            right_shot = Shot(right_position.x, right_position.y)
+            right_shot.velocity = pygame.Vector2(math.cos(math.radians(adjusted_rotation)), 
+                                                math.sin(math.radians(adjusted_rotation))) * PLAYER_SHOOT_SPEED
+            
+        if self.has_left_gun:
+            # left gun shot
+            left_shot = Shot(left_position.x, left_position.y)
+            left_shot.velocity = pygame.Vector2(math.cos(math.radians(adjusted_rotation)), 
+                                                math.sin(math.radians(adjusted_rotation))) * PLAYER_SHOOT_SPEED
+
     
