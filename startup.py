@@ -5,6 +5,7 @@ from shot import *
 from asteroid import *
 from asteroidfield import *
 from power_up import *
+from power_up_spawner import *
 from menu import *
 
 class Startup():
@@ -26,7 +27,11 @@ class Startup():
         self.player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
         Shot.containers = (self.shots, self.updateable, self.drawable)
+
+
         PowerUp.containers = (self.powerup, self.updateable, self.drawable)
+        PowerUpSpawner.containers = (self.updateable)
+        self.powerup_spawner = PowerUpSpawner()
 
         pygame.mouse.set_visible(False)
         self.crosshair_img = pygame.image.load("./images/crosshair2.png")

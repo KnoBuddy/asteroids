@@ -14,6 +14,7 @@ class Player(CircleShape):
         self.angle = 0
         self.has_left_gun = False
         self.has_right_gun = False
+        self.has_guns = False
     
     def draw(self, screen):
         self.ship_rect.center = self.position
@@ -133,5 +134,8 @@ class Player(CircleShape):
             left_shot = Shot(left_position.x, left_position.y)
             left_shot.velocity = pygame.Vector2(math.cos(math.radians(adjusted_rotation)), 
                                                 math.sin(math.radians(adjusted_rotation))) * PLAYER_SHOOT_SPEED
+        
+        if self.has_left_gun and self.has_right_gun == True:
+            self.has_guns = True
 
     

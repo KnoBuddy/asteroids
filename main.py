@@ -9,11 +9,11 @@
 # Crosshair follows mouse --- DONE!
 # Add sprites instead of basic shapes --- Player and Crosshair DONE!
 # Fix movement so that sideways movement is more user friendly
-# Collisions between asteroids and semi accurate physics bounce
+# Collisions between asteroids and walls; semi accurate physics bounce --- Mostly Done (Could use exageratted bounce to make it look and feel better)
 # Fix bullets to spawn at tip of ship, not from center --- Half DONE!
 # Implement multiple lives and respawning
 # Add score, menu screen, game loop -- DONE
-# Add power ups that change gun type or increase rate of fire
+# Add power ups that change gun type or increase rate of fire --- DONE!
 # Levels with different speeds and types of asteroids
 # Color different types of asteroids.
 
@@ -42,14 +42,13 @@ pygame.init()
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-
-
 def run_game():
     running = True
     menu = Menu(screen)
     startup = Startup()
     score = Score()
     new_score = 0
+    collision = 0
     while running == True:
         startup.dt = (startup.time.tick(60))/1000
         for event in pygame.event.get():
@@ -59,6 +58,7 @@ def run_game():
             screen.fill("black")
             menu.start_screen(screen)
             pygame.display.flip()
+            gun_timer = 0
         else:
             for object in startup.updateable:
                 object.update(startup.dt)
@@ -95,14 +95,30 @@ def run_game():
                         asteroid.split()
                         shot.kill()
                         new_score += 1
+                for asteroids in startup.asteroids:
+                    if asteroid.collides_with(asteroids):
+                            asteroid.elastic_collision(asteroids, startup.dt, 5000000, 5000000)
                 for powerup in startup.powerup:
                     if powerup.collides_with(startup.player):
-                        startup.player.has_left_gun = True
-                        startup.player.has_right_gun = True
-
+                        powerup.kill()
+                        if startup.player.has_guns == False:
+                            if startup.player.has_left_gun == True and startup.player.has_right_gun == False:
+                                startup.player.has_right_gun = True
+                            if startup.player.has_left_gun == False:
+                                startup.player.has_left_gun = True
+                if startup.player.has_guns == True:
+                    if gun_timer > 10:
+                        startup.player.has_left_gun = False
+                        startup.player.has_right_gun = False
+                        startup.player.has_guns = False
+                        gun_timer = 0
+                        startup.powerup_spawner.id = 0
             
             startup.crosshair_rect.center = pygame.mouse.get_pos()
             screen.blit(startup.crosshair_img, startup.crosshair_rect)
+            if startup.player.has_guns == True:
+                gun_timer += startup.dt
+                print(gun_timer)
 
             pygame.display.flip()
 
